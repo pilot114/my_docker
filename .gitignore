@@ -1,0 +1,5 @@
+.idea
+.env
+cache/*
+volumes/php_project/vendor
+volumes/php_project/composer.lock
