@@ -7,19 +7,26 @@ Docker образы на все случаи жизни.
 * images/alpine:
     * php - базовый php для микросервисов
     * composer - для установки vendor
+    * golang - для компиляции golang проектов
+
+* volumes - файлы для примеров типового использования
+* composes - для запуска сервисов
 
 Все типовые сборки и запуск сервисов осуществляются через make
 
 Примеры:
 
-    # сбилдить все образы
+    # сбилдить все образы в images
     make build
 
-    # просто вывести версию php и список модулей для alpine php
-    make micro-php v=volumes/php_script
+    # просто запустить index.php
+    make php v=volumes/php_script
 
     # установить зависимости в директорию проекта (используется cache)
     make composer v=volumes/php_project
+    
+    # скомпилировать проект на go
+    make go v=volumes/go_project
 
 ### TODO - подумать как интегрировать всяческие метасервисы
 

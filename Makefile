@@ -6,24 +6,29 @@ help:
 	@echo ""
 	@echo "Commands:"
 	@echo "  build"
-	@echo "  micro-php v=PATH"
+	@echo "  php v=PATH"
 	@echo "  composer v=PATH"
-	@echo "  go-compile v=PATH"
+	@echo "  go v=PATH"
 
 build:
-	@docker build -t micro-php images/alpine/php
-	@docker build -t micro-composer images/alpine/composer
-	@docker build -t micro-go images/alpine/golang
+	@docker build -t alpine-php images/alpine/php
+	@docker build -t alpine-composer images/alpine/composer
+	@docker build -t alpine-go images/alpine/golang
 
-micro-php:
-	@docker run -it --rm --name my-micro-php -v ${ROOT_DIR}/$(v):/usr/src/myapp micro-php
+php:
+	@docker run --rm --name my-alpine-php \
+	-v ${ROOT_DIR}/$(v):/usr/src/myapp \
+	alpine-php
 
 composer:
 	@echo ${ROOT_DIR}/$(v)
 	@docker run --rm --interactive --tty -v ${ROOT_DIR}/$(v):/app \
-	--volume ${COMPOSER_HOME}:/tmp \
+	-v ${COMPOSER_HOME}:/tmp \
 	--user $(id -u):$(id -g) \
-	composer install --ignore-platform-reqs --no-scripts
+	alpine-composer install --ignore-platform-reqs --no-scripts
 
-go-compile:
-	@docker run --rm -v ${ROOT_DIR}/$(v):/usr/src/myapp -w /usr/src/myapp micro-go go build -v
+go:
+	@docker run --rm --name my-alpine-go \
+	-v ${ROOT_DIR}/$(v):/usr/src/myapp \
+	-w /usr/src/myapp \
+	alpine-go go build -v

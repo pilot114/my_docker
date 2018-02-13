@@ -1,6 +1,6 @@
 {
   "name": "example/example",
   "require": {
-    "guzzlehttp/guzzle": "^6.2"
+    "fzaninotto/faker": "v1.7.1"
   }
 }

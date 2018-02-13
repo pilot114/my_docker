@@ -1,9 +1,5 @@
 FROM golang:1.9-alpine
 
 WORKDIR /go/src/app
-COPY . .
 
-RUN go-wrapper download
-RUN go-wrapper install
-
-CMD ["app"]
+CMD ["go", "build"]
