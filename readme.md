@@ -1,16 +1,20 @@
 ### Overview
 
-Docker образы на все случаи жизни.
-Запилил для себя, в основном чтобы быстро разворачивать понравившиеся проекты
-с GitHub.
+Docker образы на (почти) все случаи жизни
 
-* images/alpine:
-    * php - базовый php для микросервисов
-    * composer - для установки vendor
-    * golang - для компиляции golang проектов
+* images - для типичных юзкейсов
+    * alpine
+        * php - базовый php для микросервисов
+        * composer - для установки vendor
+        * golang - для компиляции golang проектов
+    * nginx - базовый образ для http/https сервисов
+    * grafana - мониторинг
 
 * volumes - файлы для примеров типового использования
-* composes - для запуска сервисов
+* composes - сборки для конкретных проектов
+
+TODO: настроить nginx так, чтобы можно было просто пробросить
+папку с конкретными конфигами
 
 Все типовые сборки и запуск сервисов осуществляются через make
 
@@ -28,22 +32,12 @@ Docker образы на все случаи жизни.
     # скомпилировать проект на go
     make go v=volumes/go_project
 
-### TODO - подумать как интегрировать всяческие метасервисы
+    # раздать статику на 8080 порту
+    make nginx v=volumes/html
 
-mattermost - типа Slack, gogs - типа GitHub и пр.
-
-    # Pull image from Docker Hub.
-    $ docker pull gogs/gogs
+    # запустить сервис мониторинга 3000 порту
+    make grafana
     
-    # Create local directory for volume.
-    $ mkdir -p /var/gogs
-    
-    # Use `docker run` for the first time.
-    $ docker run --name=gogs -p 10022:22 -p 10080:3000 -v /var/gogs:/data gogs/gogs
-    
-    # Use `docker start` if you have stopped it.
-    $ docker start gogs
-
 ### Заметки
 
 makefile должен содержать tab вместо space, так работает make
