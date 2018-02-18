@@ -26,8 +26,9 @@ php:
 
 composer:
 	@echo ${ROOT_DIR}/$(v)
+	@mkdir ${ROOT_DIR}/cache/composer
 	@docker run --rm --interactive --tty -v ${ROOT_DIR}/$(v):/app \
-	-v ${COMPOSER_HOME}:/tmp \
+	-v ${ROOT_DIR}/cache/composer:/tmp \
 	--user $(id -u):$(id -g) \
 	base-alpine-composer install --ignore-platform-reqs --no-scripts
 
@@ -46,3 +47,7 @@ nginx:
 grafana:
 	@docker run --rm --name my-grafana -d -p 3000:3000 \
 	base-grafana
+
+
+project:
+	@echo 'coming soon'

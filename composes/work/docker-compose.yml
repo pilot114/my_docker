@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+    web:
+        image: base-nginx
+        volumes:
+            - "./etc/nginx/ml.conf:/etc/nginx/conf.d/ml.conf"
+            - "${PROJECT_DIR}:/var/www/html"
+        ports:
+            - "8000:80"
+        environment:
+            - NGINX_HOST=${NGINX_HOST}
+        command: [nginx-debug, '-g', 'daemon off;']
+        restart: always
+        depends_on:
+            - php
+    php:
+        build: base-php-full
+        restart: always
+        volumes:
+            - "./etc/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
+            - "${PROJECT_DIR}:/var/www/html"
+        environment:
+            - HTTP_PROXY=${HTTP_PROXY}
+            - HTTPS_PROXY=${HTTP_PROXY}
+    composer:
+        image: base-alpine-composer
+        volumes:
+            - "${PROJECT_DIR}:/app"
+        command: install --ignore-platform-reqs
+        environment:
+            - HTTP_PROXY=${HTTP_PROXY}
+            - HTTPS_PROXY=${HTTP_PROXY}
