@@ -18,6 +18,8 @@ build:
 	@docker build -t base-alpine-go images/alpine/golang
 	@docker build -t base-nginx images/nginx
 	@docker build -t base-grafana images/grafana
+	@docker build -t base-php-full images/php-full
+	@docker build -t base-workspace images/workspace
 
 php:
 	@docker run --rm --name my-alpine-php \
@@ -50,4 +52,5 @@ grafana:
 
 
 project:
+	@cp .env composes/wshell
 	@echo 'coming soon'

@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+    workspace:
+        image: base-workspace
+        volumes_from:
+            - php
+        tty: true
+    web:
+        image: base-nginx
+        volumes:
+            - "wshell.conf:/etc/nginx/conf.d/wshell.conf"
+        volumes_from:
+            - php
+        ports:
+            - "80:80"
+        environment:
+            - NGINX_HOST=wshell.local
+        command: ['nginx', '-g', 'daemon off;']
+        restart: always
+        depends_on:
+            - php
+    php:
+        build: base-php-full
+        restart: always
+        volumes:
+            - "${ROOT_DIR}../wshell:/var/www"
+    composer:
+        image: base-alpine-composer
+        volumes:
+            - "${ROOT_DIR}../wshell:/app"
+        command: install --ignore-platform-reqs
