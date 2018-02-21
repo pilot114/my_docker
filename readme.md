@@ -46,6 +46,12 @@ Docker образы на все случаи ~~жизни~~ разработки
 
     cd composes/PROJECT_NAME && docker-compose up -d
 
+Может оказаться полезным делать экспорт/импорт созданных образов в tar архивы.
+Для этого можно использовать команды:
+
+    make export name=backup_images
+    make import name=backup_images
+
 ### Как собирать проекты?
 
 В каждой папке в composes лежит docker-compose.yml файл, который

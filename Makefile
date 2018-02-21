@@ -11,7 +11,8 @@ help:
 	@echo "  go v=PATH"
 	@echo "  nginx v=PATH"
 	@echo "  grafana"
-	@echo "  project NAME build|run|stop"
+	@echo "  export d=backup_images"
+	@echo "  import d=backup_images"
 
 build:
 	@docker build -t base-alpine-php images/alpine/php
@@ -50,3 +51,23 @@ nginx:
 grafana:
 	@docker run --rm --name my-grafana -d -p 3000:3000 \
 	base-grafana
+
+
+export:
+	@mkdir $(d)
+	@docker save base-alpine-php > $(d)/base-alpine-php.tar
+	@docker save base-alpine-composer > $(d)/base-alpine-composer.tar
+	@docker save base-alpine-go > $(d)/base-alpine-go.tar
+	@docker save base-nginx > $(d)/base-nginx.tar
+	@docker save base-grafana > $(d)/base-grafana.tar
+	@docker save base-php-full > $(d)/base-php-full.tar
+	@docker save base-workspace > $(d)/base-workspace.tar
+
+import:
+	@docker load < $(d)/base-alpine-php.tar
+	@docker load < $(d)/base-alpine-composer.tar
+	@docker load < $(d)/base-alpine-go.tar
+	@docker load < $(d)/base-nginx.tar
+	@docker load < $(d)/base-grafana.tar
+	@docker load < $(d)/base-php-full.tar
+	@docker load < $(d)/base-workspace.tar
