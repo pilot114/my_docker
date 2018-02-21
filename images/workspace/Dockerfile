@@ -1,3 +1,5 @@
+# https://github.com/laradock/laradock/blob/master/workspace/Dockerfile-70
+
 # Здесь уже установлено основное: php-cli, composer, git
 FROM laradock/workspace:2.0-70
 
@@ -8,6 +10,10 @@ RUN rm /var/log/lastlog /var/log/faillog
 ARG TZ=UTC
 ENV TZ ${TZ}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# cron
+COPY ./crontab /etc/cron.d
+RUN chmod -R 644 /etc/cron.d
 
 # Уходим из под юзера root на нового юзера workspace (тем не менее, имеет sudo)
 # Можно передать иды пользователя с хоста
@@ -20,7 +26,7 @@ ENV PGID ${PGID}
 RUN groupadd -g ${PGID} workspace && \
     useradd -u ${PUID} -g workspace -m workspace && \
     apt-get update -yqq
-# TODO: не работает как надо
+RUN echo workspace:workspace | chpasswd
 RUN apt-get install sudo && adduser workspace sudo
 
 # TODO переварить это https://github.com/laradock/laradock/blob/master/workspace/aliases.sh
@@ -48,13 +54,18 @@ RUN apt-get install sudo && adduser workspace sudo
 # TODO npm и yarn
 # TODO для баз клиентов накидать
 
-# Clean up
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get update && apt-get upgrade -y
+
+RUN apt-get install -y zsh
 
 USER workspace
+RUN curl -fsSL https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | zsh || true
 
-# oh my zsh!
-RUN sudo apt-get install -y zsh
-RUN sudo wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
+# add ./vendor/bin to non-root user's bashrc (needed for phpunit)
+RUN echo "" >> ~/.bashrc && echo 'export PATH="/var/www/vendor/bin:$PATH"' >> ~/.bashrc
+
+# Clean up
+USER root
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR /var/www

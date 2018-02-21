@@ -11,6 +11,7 @@ help:
 	@echo "  go v=PATH"
 	@echo "  nginx v=PATH"
 	@echo "  grafana"
+	@echo "  project NAME build|run|stop"
 
 build:
 	@docker build -t base-alpine-php images/alpine/php
@@ -49,8 +50,3 @@ nginx:
 grafana:
 	@docker run --rm --name my-grafana -d -p 3000:3000 \
 	base-grafana
-
-
-project:
-	@cp .env composes/wshell
-	@echo 'coming soon'

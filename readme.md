@@ -38,11 +38,13 @@ Docker образы на все случаи ~~жизни~~ разработки
     # запустить сервис мониторинга на 3000 порту
     make grafana
 
-Типовые команды для проектов:
+Рекомендуется заходить в workspace под соотсветсвующим юзером:
 
-    make project PROJECT_NAME build
-    make project PROJECT_NAME run
-    make project PROJECT_NAME stop
+    docker exec -it -u workspace CONTAINER_ID zsh
+
+Для запуска проекта обычно достаточно:
+
+    cd composes/PROJECT_NAME && docker-compose up -d
 
 ### Как собирать проекты?
 
