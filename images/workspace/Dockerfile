@@ -29,6 +29,10 @@ RUN groupadd -g ${PGID} workspace && \
 RUN echo workspace:workspace | chpasswd
 RUN apt-get install sudo && adduser workspace sudo
 
+RUN apt-get update && apt-get upgrade -y
+
+RUN apt-get install -y zsh
+
 # TODO переварить это https://github.com/laradock/laradock/blob/master/workspace/aliases.sh
 #COPY ./aliases.sh /home/workspace/aliases.sh
 #RUN echo "" >> ~/.bashrc && \
@@ -49,14 +53,11 @@ RUN apt-get install sudo && adduser workspace sudo
 #        && chmod 644 /root/.ssh/authorized_keys /root/.ssh/id_rsa.pub \
 #    && chmod 400 /root/.ssh/id_rsa \
 #    && cp -rf /root/.ssh /home/laradock \
-#    && chown -R laradock:laradock /home/laradock/.ssh
+#    && chown -R workspace:workspace /home/laradock/.ssh
 
 # TODO npm и yarn
 # TODO для баз клиентов накидать
-
-RUN apt-get update && apt-get upgrade -y
-
-RUN apt-get install -y zsh
+RUN pecl install mongodb && echo 'extension=mongodb.so' >> /etc/php/7.0/cli/php.ini
 
 USER workspace
 RUN curl -fsSL https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | zsh || true
