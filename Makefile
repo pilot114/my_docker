@@ -13,6 +13,9 @@ help:
 	@echo "  grafana"
 	@echo "  export d=backup_images"
 	@echo "  import d=backup_images"
+	@echo "  "
+	@echo "run project and enter to workspace:"
+	@echo "  wshell"
 
 build:
 	@docker build -t base-alpine-php images/alpine/php
@@ -52,6 +55,10 @@ grafana:
 	@docker run --rm --name my-grafana -d -p 3000:3000 \
 	base-grafana
 
+wshell:
+	@cd composes/wshell && docker-compose up -d
+	@docker exec -it -u workspace wshell_workspace_1 zsh
+	@cd composes/wshell && docker-compose stop
 
 export:
 	@mkdir $(d)
