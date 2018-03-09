@@ -1,7 +1,7 @@
-# https://github.com/laradock/laradock/blob/master/workspace/Dockerfile-70
+# https://github.com/laradock/laradock/blob/master/workspace/Dockerfile-72
 
 # Здесь уже установлено основное: php-cli, composer, git
-FROM laradock/workspace:2.0-70
+FROM laradock/workspace:2.0-72
 
 # чистим логи
 RUN rm /var/log/lastlog /var/log/faillog
@@ -53,11 +53,10 @@ RUN apt-get install -y zsh
 #        && chmod 644 /root/.ssh/authorized_keys /root/.ssh/id_rsa.pub \
 #    && chmod 400 /root/.ssh/id_rsa \
 #    && cp -rf /root/.ssh /home/laradock \
-#    && chown -R workspace:workspace /home/laradock/.ssh
+#    && chown -R workspace:workspace /home/workspace/.ssh
 
-# TODO npm и yarn
 # TODO для баз клиентов накидать
-RUN pecl install mongodb && echo 'extension=mongodb.so' >> /etc/php/7.0/cli/php.ini
+RUN pecl install mongodb && echo 'extension=mongodb.so' >> /etc/php/7.2/cli/php.ini
 
 USER workspace
 RUN curl -fsSL https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | zsh || true
