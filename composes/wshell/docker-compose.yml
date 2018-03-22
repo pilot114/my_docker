@@ -5,6 +5,8 @@ services:
         image: base-workspace
         volumes:
             - "${WSHELL_DIR}:/var/www/wshell"
+        ports:
+            - "8080:8080"
         tty: true
     web:
         image: base-nginx
