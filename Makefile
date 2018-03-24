@@ -14,8 +14,9 @@ help:
 	@echo "  export d=backup_images"
 	@echo "  import d=backup_images"
 	@echo "  "
-	@echo "run project and enter to workspace:"
+	@echo "run project/template and enter to workspace:"
 	@echo "  wshell"
+	@echo "  fileserver"
 
 build:
 	@docker build -t base-alpine-php images/alpine/php
@@ -55,11 +56,6 @@ grafana:
 	@docker run --rm --name my-grafana -d -p 3000:3000 \
 	base-grafana
 
-wshell:
-	@cd composes/wshell && docker-compose up -d
-	@docker exec -it -u workspace wshell_workspace_1 zsh
-	@cd composes/wshell && docker-compose stop
-
 export:
 	@mkdir $(d)
 	@docker save base-alpine-php > $(d)/base-alpine-php.tar
@@ -78,3 +74,15 @@ import:
 	@docker load < $(d)/base-grafana.tar
 	@docker load < $(d)/base-php-full.tar
 	@docker load < $(d)/base-workspace.tar
+
+
+
+wshell:
+	@cd composes/wshell && docker-compose up -d
+	@docker exec -it -u workspace wshell_workspace_1 zsh
+	@cd composes/wshell && docker-compose stop
+
+fileserver:
+	@cd composes/fileserver && docker-compose up -d
+	@docker exec -it -u workspace fileserver_workspace_1 zsh
+	@cd composes/fileserver && docker-compose stop
