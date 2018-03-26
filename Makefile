@@ -29,27 +29,24 @@ build:
 
 php:
 	@docker run --rm --name my-alpine-php \
-	-v ${ROOT_DIR}/$(v):/usr/src/myapp \
+	-v $(v):/usr/src/myapp \
 	base-alpine-php
 
 composer:
-	@echo ${ROOT_DIR}/$(v)
-	@mkdir ${ROOT_DIR}/cache/composer
-	@docker run --rm --interactive --tty -v ${ROOT_DIR}/$(v):/app \
+	@docker run --rm --interactive --tty -v $(v):/app \
 	-v ${ROOT_DIR}/cache/composer:/tmp \
 	--user $(id -u):$(id -g) \
 	base-alpine-composer install --ignore-platform-reqs --no-scripts
 
 go:
 	@docker run --rm --name my-alpine-go \
-	-v ${ROOT_DIR}/$(v):/usr/src/myapp \
+	-v $(v):/usr/src/myapp \
 	-w /usr/src/myapp \
 	base-alpine-go go build -v
 
 nginx:
-	@echo ${ROOT_DIR}/$(v)
 	@docker run --rm --name my-nginx -d -p 8080:80 \
-	-v ${ROOT_DIR}/$(v):/usr/share/nginx/html \
+	-v $(v):/usr/share/nginx/html \
 	base-nginx
 
 grafana:
@@ -74,8 +71,6 @@ import:
 	@docker load < $(d)/base-grafana.tar
 	@docker load < $(d)/base-php-full.tar
 	@docker load < $(d)/base-workspace.tar
-
-
 
 wshell:
 	@cd composes/wshell && docker-compose up -d

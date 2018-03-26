@@ -24,19 +24,22 @@ Docker образы на все случаи ~~жизни~~ разработки
     make build
 
     # просто запустить index.php
-    make php v=volumes/php_script
+    make php v=$(pwd)/volumes/php_script
 
     # установить зависимости в директорию проекта (используется cache)
-    make composer v=volumes/php_project
+    make composer v=$(pwd)/volumes/php_project
     
     # скомпилировать проект на go
-    make go v=volumes/go_project
+    make go v=$(pwd)/volumes/go_project
 
     # раздать статику на 8080 порту
-    make nginx v=volumes/html
+    make nginx v=$(pwd)/volumes/html
 
     # запустить сервис мониторинга на 3000 порту
     make grafana
+
+В качестве параметра 'v' передаётся абсолютный путь до директории.
+
 
 Рекомендуется заходить в workspace под соответствующим юзером:
 
