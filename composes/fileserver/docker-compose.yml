@@ -16,7 +16,7 @@ services:
         ports:
             - "80:80"
         environment:
-            - NGINX_HOST=wshell.local
+            - NGINX_HOST=fileserver.local
         command: ['nginx', '-g', 'daemon off;']
         restart: always
         depends_on:
@@ -26,8 +26,3 @@ services:
         restart: always
         volumes:
             - "${PROJECT_DIR}:/var/www/fileserver"
-    composer:
-        image: base-alpine-composer
-        volumes:
-            - "${PROJECT_DIR}:/app"
-        command: install --ignore-platform-reqs
