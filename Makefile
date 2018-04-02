@@ -72,6 +72,9 @@ import:
 	@docker load < $(d)/base-php-full.tar
 	@docker load < $(d)/base-workspace.tar
 
+prune:
+	@docker stop $(docker ps -a -q) && docker system prune
+
 wshell:
 	@cd composes/wshell && docker-compose up -d
 	@docker exec -it -u workspace wshell_workspace_1 zsh
