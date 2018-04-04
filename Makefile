@@ -77,10 +77,12 @@ prune:
 
 wshell:
 	@cd composes/wshell && docker-compose up -d
+	@sleep 3
 	@docker exec -it -u workspace wshell_workspace_1 zsh
 	@cd composes/wshell && docker-compose stop
 
 fileserver:
 	@cd composes/fileserver && docker-compose up -d
+	@sleep 3
 	@docker exec -it -u workspace fileserver_workspace_1 zsh
 	@cd composes/fileserver && docker-compose stop
