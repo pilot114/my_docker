@@ -55,7 +55,12 @@ RUN apt-get install -y zsh
 RUN pecl install mongodb && echo 'extension=mongodb.so' >> /etc/php/7.2/cli/php.ini
 
 USER workspace
-RUN curl -fsSL https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | zsh || true
+
+# в данный момент oh-my-zsh неправильно чекает наличие git и не устанавливается
+# https://github.com/robbyrussell/oh-my-zsh/issues/6697
+# RUN curl -fsSL https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | zsh || true
+RUN cd ~ && curl -fsSL https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh > temp.sh && \
+    cat temp.sh | sed --expression '/exit 1/d' > install.sh && cat install.sh | zsh || true
 
 # add ./vendor/bin to non-root user's bashrc (needed for phpunit)
 RUN echo "" >> ~/.bashrc && echo 'export PATH="/var/www/vendor/bin:$PATH"' >> ~/.bashrc
