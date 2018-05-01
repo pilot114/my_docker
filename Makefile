@@ -25,7 +25,6 @@ build:
 	@docker build -t base-nginx images/nginx
 	@docker build -t base-grafana images/grafana
 	@docker build -t base-php-full images/php-full
-	@docker build -t base-workspace images/workspace
 
 php:
 	@docker run --rm --name my-alpine-php \
@@ -77,12 +76,10 @@ prune:
 
 wshell:
 	@cd composes/wshell && docker-compose up -d
-	@sleep 3
 	@docker exec -it -u workspace wshell_workspace_1 zsh
 	@cd composes/wshell && docker-compose stop
 
 fileserver:
 	@cd composes/fileserver && docker-compose up -d
-	@sleep 3
 	@docker exec -it -u workspace fileserver_workspace_1 zsh
 	@cd composes/fileserver && docker-compose stop

@@ -2,7 +2,7 @@ version: '3'
 
 services:
     workspace:
-        image: base-workspace
+        image: pilot114/base-workspace
         volumes:
             - "${PROJECT_DIR}:/var/www/fileserver"
         ports:
