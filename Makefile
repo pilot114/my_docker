@@ -13,54 +13,56 @@ help:
 	@echo "  grafana"
 	@echo "  export d=backup_images"
 	@echo "  import d=backup_images"
+	@echo "  push"
 	@echo "  "
 	@echo "run project/template and enter to workspace:"
 	@echo "  wshell"
 	@echo "  fileserver"
 
 build:
-	@docker build -t base-alpine-php images/alpine/php
-	@docker build -t base-alpine-composer images/alpine/composer
-	@docker build -t base-alpine-go images/alpine/golang
-	@docker build -t base-nginx images/nginx
-	@docker build -t base-grafana images/grafana
-	@docker build -t base-php-full images/php-full
+	@docker build -t pilot114/base-alpine-php      images/alpine/php
+	@docker build -t pilot114/base-alpine-composer images/alpine/composer
+	@docker build -t pilot114/base-alpine-go       images/alpine/golang
+	@docker build -t pilot114/base-nginx           images/nginx
+	@docker build -t pilot114/base-grafana         images/grafana
+	@docker build -t pilot114/base-php-full        images/php-full
+	@docker build -t pilot114/base-workspace       images/workspace
 
 php:
 	@docker run --rm --name my-alpine-php \
 	-v $(v):/usr/src/myapp \
-	base-alpine-php
+	pilot114/base-alpine-php
 
 composer:
 	@docker run --rm --interactive --tty -v $(v):/app \
 	-v ${ROOT_DIR}/cache/composer:/tmp \
 	--user $(id -u):$(id -g) \
-	base-alpine-composer install --ignore-platform-reqs --no-scripts
+	pilot114/base-alpine-composer install --ignore-platform-reqs --no-scripts
 
 go:
 	@docker run --rm --name my-alpine-go \
 	-v $(v):/usr/src/myapp \
 	-w /usr/src/myapp \
-	base-alpine-go go build -v
+	pilot114/base-alpine-go go build -v
 
 nginx:
 	@docker run --rm --name my-nginx -d -p 8080:80 \
 	-v $(v):/usr/share/nginx/html \
-	base-nginx
+	pilot114/base-nginx
 
 grafana:
 	@docker run --rm --name my-grafana -d -p 3000:3000 \
-	base-grafana
+	pilot114/base-grafana
 
 export:
 	@mkdir $(d)
-	@docker save base-alpine-php > $(d)/base-alpine-php.tar
-	@docker save base-alpine-composer > $(d)/base-alpine-composer.tar
-	@docker save base-alpine-go > $(d)/base-alpine-go.tar
-	@docker save base-nginx > $(d)/base-nginx.tar
-	@docker save base-grafana > $(d)/base-grafana.tar
-	@docker save base-php-full > $(d)/base-php-full.tar
-	@docker save base-workspace > $(d)/base-workspace.tar
+	@docker save pilot114/base-alpine-php > $(d)/base-alpine-php.tar
+	@docker save pilot114/base-alpine-composer > $(d)/base-alpine-composer.tar
+	@docker save pilot114/base-alpine-go > $(d)/base-alpine-go.tar
+	@docker save pilot114/base-nginx > $(d)/base-nginx.tar
+	@docker save pilot114/base-grafana > $(d)/base-grafana.tar
+	@docker save pilot114/base-php-full > $(d)/base-php-full.tar
+	@docker save pilot114/base-workspace > $(d)/base-workspace.tar
 
 import:
 	@docker load < $(d)/base-alpine-php.tar
@@ -73,3 +75,12 @@ import:
 
 prune:
 	@docker stop $(docker ps -a -q) && docker system prune
+
+push:
+	@docker push pilot114/base-alpine-php
+	@docker push pilot114/base-alpine-composer
+	@docker push pilot114/base-alpine-go
+	@docker push pilot114/base-nginx
+	@docker push pilot114/base-grafana
+	@docker push pilot114/base-php-full
+	@docker push pilot114/base-workspace
