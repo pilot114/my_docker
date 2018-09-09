@@ -13,11 +13,8 @@ help:
 	@echo "  grafana"
 	@echo "  export d=backup_images"
 	@echo "  import d=backup_images"
+	@echo "  prune"
 	@echo "  push"
-	@echo "  "
-	@echo "run project/template and enter to workspace:"
-	@echo "  wshell"
-	@echo "  fileserver"
 
 build:
 	@docker build -t pilot114/base-alpine-php      images/alpine/php
@@ -25,7 +22,7 @@ build:
 	@docker build -t pilot114/base-alpine-go       images/alpine/golang
 	@docker build -t pilot114/base-nginx           images/nginx
 	@docker build -t pilot114/base-grafana         images/grafana
-	@docker build -t pilot114/base-php-full        images/php-full
+	@docker build -t pilot114/base-php-wshell      images/php-wshell
 	@docker build -t pilot114/base-workspace       images/workspace
 
 php:
@@ -61,7 +58,7 @@ export:
 	@docker save pilot114/base-alpine-go > $(d)/base-alpine-go.tar
 	@docker save pilot114/base-nginx > $(d)/base-nginx.tar
 	@docker save pilot114/base-grafana > $(d)/base-grafana.tar
-	@docker save pilot114/base-php-full > $(d)/base-php-full.tar
+	@docker save pilot114/base-php-wshell > $(d)/base-php-wshell.tar
 	@docker save pilot114/base-workspace > $(d)/base-workspace.tar
 
 import:
@@ -70,7 +67,7 @@ import:
 	@docker load < $(d)/base-alpine-go.tar
 	@docker load < $(d)/base-nginx.tar
 	@docker load < $(d)/base-grafana.tar
-	@docker load < $(d)/base-php-full.tar
+	@docker load < $(d)/base-php-wshell.tar
 	@docker load < $(d)/base-workspace.tar
 
 prune:
@@ -82,5 +79,5 @@ push:
 	@docker push pilot114/base-alpine-go
 	@docker push pilot114/base-nginx
 	@docker push pilot114/base-grafana
-	@docker push pilot114/base-php-full
+	@docker push pilot114/base-php-wshell
 	@docker push pilot114/base-workspace
