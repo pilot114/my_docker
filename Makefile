@@ -24,6 +24,7 @@ build:
 	@docker build -t pilot114/base-grafana         images/grafana
 	@docker build -t pilot114/base-php-wshell      images/php-wshell
 	@docker build -t pilot114/base-workspace       images/workspace
+	@docker build -t pilot114/base-laradock        images/laradock
 
 php:
 	@docker run --rm --name my-alpine-php \
@@ -60,6 +61,7 @@ export:
 	@docker save pilot114/base-grafana > $(d)/base-grafana.tar
 	@docker save pilot114/base-php-wshell > $(d)/base-php-wshell.tar
 	@docker save pilot114/base-workspace > $(d)/base-workspace.tar
+	@docker save pilot114/base-laradock > $(d)/base-laradock.tar
 
 import:
 	@docker load < $(d)/base-alpine-php.tar
@@ -69,6 +71,7 @@ import:
 	@docker load < $(d)/base-grafana.tar
 	@docker load < $(d)/base-php-wshell.tar
 	@docker load < $(d)/base-workspace.tar
+	@docker load < $(d)/base-laradock.tar
 
 prune:
 	@docker stop $(docker ps -a -q) && docker system prune
@@ -81,3 +84,4 @@ push:
 	@docker push pilot114/base-grafana
 	@docker push pilot114/base-php-wshell
 	@docker push pilot114/base-workspace
+	@docker push pilot114/base-laradock
