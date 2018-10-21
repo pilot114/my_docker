@@ -1,18 +1,92 @@
-# https://github.com/laradock/laradock/blob/master/workspace/Dockerfile-72
+# Образ "всё-в-одном", для web-разработки в стеке PHP + JS
+# (https://phusion.github.io/baseimage-docker/)
+#
+# Основан на phusion/baseimage-docker (ubuntu:18.04 - поддержка до 23 года), что означает:
+# - все базовые службы ОС работают (init, syslog, cron, ssh daemon)
+# - образ "съедает" всего 6Mb RAM
+# - можно добавлять своих демонов
 
-# Здесь уже установлено основное: php-cli, composer, git
-FROM laradock/workspace:2.0-72
+FROM phusion/baseimage:0.11
 
-# чистим логи
-RUN rm /var/log/lastlog /var/log/faillog
+MAINTAINER Oleg Chulkov pilot114@bk.ru
+
+# отключаем подтверждения при установке пакетов
+RUN DEBIAN_FRONTEND=noninteractive
+
+# локализация
+RUN locale-gen ru_RU.UTF-8
+
+ENV LANGUAGE=ru_RU.UTF-8
+ENV LC_ALL=ru_RU.UTF-8
+ENV LC_CTYPE=ru_RU.UTF-8
+ENV LANG=ru_RU.UTF-8
+
+# стандартные настройки эмулятора терминала
+ENV TERM xterm
+
+############
+# Software #
+############
+RUN apt-get install -y software-properties-common && \
+    add-apt-repository -y ppa:ondrej/php
+
+RUN apt-get update && \
+    apt-get install -y --allow-downgrades --allow-remove-essential \
+        --allow-change-held-packages \
+        php7.0-cli \
+        php7.0-common \
+        php7.0-curl \
+        php7.0-intl \
+        php7.0-json \
+        php7.0-xml \
+        php7.0-mbstring \
+        php7.0-mcrypt \
+        php7.0-mysql \
+        php7.0-pgsql \
+        php7.0-sqlite \
+        php7.0-sqlite3 \
+        php7.0-zip \
+        php7.0-bcmath \
+        php7.0-memcached \
+        php7.0-gd \
+        php7.0-dev \
+        pkg-config \
+        libcurl4-openssl-dev \
+        libedit-dev \
+        libssl-dev \
+        libxml2-dev \
+        xz-utils \
+        libsqlite3-dev \
+        sqlite3 \
+        git \
+        curl \
+        vim \
+        nano \
+        postgresql-client \
+        mysql-client \
+        mongodb-clients \
+        zsh \
+        tree \
+        sudo \
+        htop
+
+# обновляем кэш pecl
+RUN pecl channel-update pecl.php.net
+RUN pecl install mongodb && echo 'extension=mongodb.so' >> /etc/php/7.0/cli/php.ini
+
+# composer
+RUN curl -s http://getcomposer.org/installer | php && \
+    mv composer.phar /usr/local/bin/composer
 
 # таймзона
-ARG TZ=UTC
-ENV TZ ${TZ}
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN ln -snf /usr/share/zoneinfo/Asia/Novosibirsk /etc/localtime && echo Asia/Novosibirsk > /etc/timezone
+
+# Кроны
+COPY ./crontab /etc/cron.d
+RUN chmod -R 644 /etc/cron.d
 
 # Уходим из под юзера root на нового юзера workspace (тем не менее, имеет sudo)
-# Можно передать иды пользователя с хоста
+# иды пользователя можно передать с хоста
 
 ARG PUID=1000
 ARG PGID=1000
@@ -20,113 +94,61 @@ ENV PUID ${PUID}
 ENV PGID ${PGID}
 
 RUN groupadd -g ${PGID} workspace && \
-    useradd -u ${PUID} -g workspace -m workspace && \
-    apt-get update -yqq
+    useradd -u ${PUID} -g workspace -m workspace
 RUN echo workspace:workspace | chpasswd
-RUN apt-get install sudo && adduser workspace sudo
+RUN adduser workspace sudo
 
-RUN apt-get update && apt-get upgrade -y
-
-RUN apt-get install -y zsh
-
-# TODO переварить это https://github.com/laradock/laradock/blob/master/workspace/aliases.sh
-#COPY ./aliases.sh /home/workspace/aliases.sh
-#RUN echo "" >> ~/.bashrc && \
-#   echo "# Кастомные алиасы" >> ~/.bashrc && \
-#   echo "source /home/workspace/aliases.sh" >> ~/.bashrc && \
-#	echo "" >> ~/.bashrc && \
-#	sed -i 's/\r//' /home/workspace/aliases.sh && \
-#	sed -i 's/^#! \/bin\/sh/#! \/bin\/bash/' /home/workspace/aliases.sh
-
-# TODO ssh
-#ADD insecure_id_rsa /tmp/id_rsa
-#ADD insecure_id_rsa.pub /tmp/id_rsa.pub
-#RUN rm -f /etc/service/sshd/down && \
-#    cat /tmp/id_rsa.pub >> /root/.ssh/authorized_keys \
-#        && cat /tmp/id_rsa.pub >> /root/.ssh/id_rsa.pub \
-#        && cat /tmp/id_rsa >> /root/.ssh/id_rsa \
-#        && rm -f /tmp/id_rsa* \
-#        && chmod 644 /root/.ssh/authorized_keys /root/.ssh/id_rsa.pub \
-#    && chmod 400 /root/.ssh/id_rsa \
-#    && cp -rf /root/.ssh /home/laradock \
-#    && chown -R workspace:workspace /home/workspace/.ssh
-
-# TODO для баз клиентов накидать
-RUN pecl install mongodb && echo 'extension=mongodb.so' >> /etc/php/7.2/cli/php.ini
-
+#############################
+# Далее настройки workspace #
+#############################
 USER workspace
+
+# oh-my-zsh
 RUN curl -fsSL https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | zsh || true
 
-# add ./vendor/bin to non-root user's bashrc (needed for phpunit)
-RUN echo "" >> ~/.bashrc && echo 'export PATH="/var/www/vendor/bin:$PATH"' >> ~/.bashrc
+# алиасы
+# TODO: добавить алисы для git, когда достаточно хорошо пойму что нужно
+COPY ./aliases.sh /home/workspace/aliases.sh
 
-# Change to root
+RUN sed -i 's/\r//' /home/workspace/aliases.sh && \
+    chown workspace:workspace /home/workspace/aliases.sh && \
+    echo "\nsource ~/aliases.sh\n" >> ~/.bashrc && \
+    echo "\nsource ~/aliases.sh\n" >> ~/.zshrc
+
 USER root
 
-# Node + yarn
-RUN groupadd --gid 1001 node && \
-useradd --uid 1001 --gid node --shell /bin/bash --create-home node
+# ssh ключ по умолчанию
+#COPY your_key.pub /tmp/your_key.pub
+#RUN cat /tmp/your_key.pub >> /root/.ssh/authorized_keys && rm -f /tmp/your_key.pub
+ADD insecure_id_rsa /tmp/id_rsa
+ADD insecure_id_rsa.pub /tmp/id_rsa.pub
+RUN rm -f /etc/service/sshd/down && mkdir /home/workspace/.ssh && \
+    cat /tmp/id_rsa.pub >> /home/workspace/.ssh/authorized_keys \
+        && cat /tmp/id_rsa.pub >> /home/workspace/.ssh/id_rsa.pub \
+        && cat /tmp/id_rsa >> /home/workspace/.ssh/id_rsa \
+        && rm -f /tmp/id_rsa* \
+        && chmod 644 /home/workspace/.ssh/authorized_keys /home/workspace/.ssh/id_rsa.pub \
+    && chmod 400 /home/workspace/.ssh/id_rsa \
+    && chown -R workspace:workspace /home/workspace/.ssh
 
-RUN set -ex \
-  && for key in \
-    94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
-    FD3A5288F042B6850C66B31F09FE44734EB7990E \
-    71DCFD284A79C3B38668286BC97EC7A07EDE3FC1 \
-    DD8F2338BAE7501E3DD5AC78C273792F7D83545D \
-    C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8 \
-    B9AE9905FFD7803F25714661B63B535A4C206CA9 \
-    56730D5401028683275BD23C23EFEFE93C4CFFFE \
-    77984A986EBC2AA786BC0F66B01FBB92821C587A \
-  ; do \
-    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
-    gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
-    gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
-  done
+# install nodejs
+RUN apt-get install -y wget && wget -qO- https://deb.nodesource.com/setup_8.x | sudo -E bash - && \
+    apt-get install -y nodejs build-essential
 
-ENV NODE_VERSION 9.8.0
+# global codecept, phpunit, webpack, phpmd
+RUN curl -LsS https://codeception.com/codecept.phar -o /usr/local/bin/codecept && \
+    chmod a+x /usr/local/bin/codecept
+RUN wget https://phar.phpunit.de/phpunit-6.phar -O /usr/local/bin/phpunit && \
+    chmod a+x /usr/local/bin/phpunit
+RUN npm install --global webpack webpack-cli
+RUN wget -c http://static.phpmd.org/php/latest/phpmd.phar -O /usr/local/bin/phpmd && \
+    chmod a+x /usr/local/bin/phpmd
 
-RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
-  && case "${dpkgArch##*-}" in \
-    amd64) ARCH='x64';; \
-    ppc64el) ARCH='ppc64le';; \
-    s390x) ARCH='s390x';; \
-    arm64) ARCH='arm64';; \
-    armhf) ARCH='armv7l';; \
-    i386) ARCH='x86';; \
-    *) echo "unsupported architecture"; exit 1 ;; \
-  esac \
-  && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
-  && curl -SLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
-  && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-  && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-  && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-  && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
-  && ln -s /usr/local/bin/node /usr/local/bin/nodejs
+# Очистка
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    rm /var/log/lastlog /var/log/faillog
 
-ENV YARN_VERSION 1.5.1
-
-RUN set -ex \
-  && for key in \
-    6A010C5166006599AA17F08146C2130DFD2497F5 \
-  ; do \
-    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
-    gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
-    gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
-  done \
-  && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
-  && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \
-  && gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
-  && mkdir -p /opt/yarn \
-  && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/yarn --strip-components=1 \
-  && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarn \
-  && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarnpkg \
-  && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
-
-# TODO: cron
-#COPY ./crontab /etc/cron.d
-#RUN chmod -R 644 /etc/cron.d
-
-# clean up
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+USER workspace
 
 WORKDIR /var/www
