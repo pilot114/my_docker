@@ -33,23 +33,22 @@ RUN apt-get install -y software-properties-common && \
 RUN apt-get update && \
     apt-get install -y --allow-downgrades --allow-remove-essential \
         --allow-change-held-packages \
-        php7.0-cli \
-        php7.0-common \
-        php7.0-curl \
-        php7.0-intl \
-        php7.0-json \
-        php7.0-xml \
-        php7.0-mbstring \
-        php7.0-mcrypt \
-        php7.0-mysql \
-        php7.0-pgsql \
-        php7.0-sqlite \
-        php7.0-sqlite3 \
-        php7.0-zip \
-        php7.0-bcmath \
-        php7.0-memcached \
-        php7.0-gd \
-        php7.0-dev \
+        php7.2-cli \
+        php7.2-common \
+        php7.2-curl \
+        php7.2-intl \
+        php7.2-json \
+        php7.2-xml \
+        php7.2-mbstring \
+        php7.2-mysql \
+        php7.2-pgsql \
+        php7.2-sqlite \
+        php7.2-sqlite3 \
+        php7.2-zip \
+        php7.2-bcmath \
+        php7.2-memcached \
+        php7.2-gd \
+        php7.2-dev \
         pkg-config \
         libcurl4-openssl-dev \
         libedit-dev \
@@ -72,7 +71,7 @@ RUN apt-get update && \
 
 # обновляем кэш pecl
 RUN pecl channel-update pecl.php.net
-RUN pecl install mongodb && echo 'extension=mongodb.so' >> /etc/php/7.0/cli/php.ini
+RUN pecl install mongodb && echo 'extension=mongodb.so' >> /etc/php/7.2/cli/php.ini
 
 # composer
 RUN curl -s http://getcomposer.org/installer | php && \
@@ -153,3 +152,8 @@ RUN apt-get clean && \
     rm /var/log/lastlog /var/log/faillog
 
 WORKDIR /var/www
+
+# корректный запуск init c переключением на workspace
+# CMD ["/sbin/my_init", "--", "setuser", "workspace", "zsh"]
+# upd.: это не заставляет докер запускаться под workspace.
+# Видимо, в любом случае, придется передавать -u workspace при старте
