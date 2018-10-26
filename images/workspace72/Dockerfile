@@ -146,6 +146,11 @@ RUN wget -c http://static.phpmd.org/php/latest/phpmd.phar -O /usr/local/bin/phpm
 # install vue-cli
 RUN npm install -g @vue/cli
 
+# install yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
+    sudo apt-get install yarn
+
 # Очистка
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
