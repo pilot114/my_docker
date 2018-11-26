@@ -1,6 +1,7 @@
 .idea
 .env
 cache/*
+services/*
 volumes/php_project/vendor
 volumes/php_project/composer.lock
 volumes/go_project/myapp

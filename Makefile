@@ -15,6 +15,9 @@ help:
 	@echo "  import d=backup_images"
 	@echo "  prune"
 	@echo "  push"
+	@echo ""
+	@echo "  service_build"
+	@echo "  service_push"
 
 build:
 	@docker build -t pilot114/base-alpine-php      images/alpine/php
@@ -89,3 +92,12 @@ push:
 	@docker push pilot114/base-workspace
 	@docker push pilot114/base-workspace72
 	@docker push pilot114/base-laradock
+
+#############################################
+# далее - только то, что относится к сервисам
+#############################################
+
+service_build:
+	@cd services && ./build.sh
+service_push:
+	@cd services && ./push.sh
