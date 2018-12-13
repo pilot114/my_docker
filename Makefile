@@ -6,8 +6,6 @@ help:
 	@echo ""
 	@echo "Commands:"
 	@echo "  build"
-	@echo "  php v=PATH"
-	@echo "  composer v=PATH"
 	@echo "  go v=PATH"
 	@echo "  nginx v=PATH"
 	@echo "  grafana"
@@ -20,26 +18,11 @@ help:
 	@echo "  service_push"
 
 build:
-	@docker build -t pilot114/base-alpine-php      images/alpine/php
-	@docker build -t pilot114/base-alpine-composer images/alpine/composer
-	@docker build -t pilot114/base-alpine-go       images/alpine/golang
 	@docker build -t pilot114/base-nginx           images/nginx
 	@docker build -t pilot114/base-grafana         images/grafana
 	@docker build -t pilot114/base-php-wshell      images/php-wshell
 	@docker build -t pilot114/base-workspace       images/workspace
 	@docker build -t pilot114/base-workspace72     images/workspace72
-	@docker build -t pilot114/base-laradock        images/laradock
-
-php:
-	@docker run --rm --name my-alpine-php \
-	-v $(v):/usr/src/myapp \
-	pilot114/base-alpine-php
-
-composer:
-	@docker run --rm --interactive --tty -v $(v):/app \
-	-v ${ROOT_DIR}/cache/composer:/tmp \
-	--user $(id -u):$(id -g) \
-	pilot114/base-alpine-composer install --ignore-platform-reqs --no-scripts
 
 go:
 	@docker run --rm --name my-alpine-go \
@@ -58,40 +41,28 @@ grafana:
 
 export:
 	@mkdir $(d)
-	@docker save pilot114/base-alpine-php > $(d)/base-alpine-php.tar
-	@docker save pilot114/base-alpine-composer > $(d)/base-alpine-composer.tar
-	@docker save pilot114/base-alpine-go > $(d)/base-alpine-go.tar
 	@docker save pilot114/base-nginx > $(d)/base-nginx.tar
 	@docker save pilot114/base-grafana > $(d)/base-grafana.tar
 	@docker save pilot114/base-php-wshell > $(d)/base-php-wshell.tar
 	@docker save pilot114/base-workspace > $(d)/base-workspace.tar
 	@docker save pilot114/base-workspace72 > $(d)/base-workspace72.tar
-	@docker save pilot114/base-laradock > $(d)/base-laradock.tar
 
 import:
-	@docker load < $(d)/base-alpine-php.tar
-	@docker load < $(d)/base-alpine-composer.tar
-	@docker load < $(d)/base-alpine-go.tar
 	@docker load < $(d)/base-nginx.tar
 	@docker load < $(d)/base-grafana.tar
 	@docker load < $(d)/base-php-wshell.tar
 	@docker load < $(d)/base-workspace.tar
 	@docker load < $(d)/base-workspace72.tar
-	@docker load < $(d)/base-laradock.tar
 
 prune:
 	@docker stop $(docker ps -a -q) && docker system prune
 
 push:
-	@docker push pilot114/base-alpine-php
-	@docker push pilot114/base-alpine-composer
-	@docker push pilot114/base-alpine-go
 	@docker push pilot114/base-nginx
 	@docker push pilot114/base-grafana
 	@docker push pilot114/base-php-wshell
 	@docker push pilot114/base-workspace
 	@docker push pilot114/base-workspace72
-	@docker push pilot114/base-laradock
 
 #############################################
 # далее - только то, что относится к сервисам

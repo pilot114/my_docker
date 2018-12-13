@@ -30,6 +30,9 @@ ENV TERM xterm
 RUN apt-get install -y software-properties-common && \
     add-apt-repository -y ppa:ondrej/php
 
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
 RUN apt-get update && \
     apt-get install -y --allow-downgrades --allow-remove-essential \
         --allow-change-held-packages \
@@ -67,7 +70,8 @@ RUN apt-get update && \
         zsh \
         tree \
         sudo \
-        htop
+        htop \
+        yarn
 
 # обновляем кэш pecl
 RUN pecl channel-update pecl.php.net
@@ -146,10 +150,8 @@ RUN wget -c http://static.phpmd.org/php/latest/phpmd.phar -O /usr/local/bin/phpm
 # install vue-cli
 RUN npm install -g @vue/cli
 
-# install yarn
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
-    sudo apt-get install -y yarn
+# для laravel-mix
+RUN npm install --global cross-env
 
 # Очистка
 RUN apt-get clean && \
