@@ -39,6 +39,9 @@ grafana:
 	@docker run --rm --name my-grafana -d -p 3000:3000 \
 	pilot114/base-grafana
 
+postgres:
+	@docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d -p 5432:5432 postgres
+
 export:
 	@mkdir $(d)
 	@docker save pilot114/base-nginx > $(d)/base-nginx.tar
