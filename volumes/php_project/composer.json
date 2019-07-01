@@ -1,6 +1,0 @@
-{
-  "name": "example/example",
-  "require": {
-    "fzaninotto/faker": "v1.7.1"
-  }
-}

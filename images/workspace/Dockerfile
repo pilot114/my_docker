@@ -141,8 +141,9 @@ RUN curl -LsS https://codeception.com/codecept.phar -o /usr/local/bin/codecept &
 RUN wget https://phar.phpunit.de/phpunit-6.phar -O /usr/local/bin/phpunit && \
     chmod a+x /usr/local/bin/phpunit
 RUN npm install --global webpack webpack-cli
-RUN wget -c http://static.phpmd.org/php/latest/phpmd.phar -O /usr/local/bin/phpmd && \
-    chmod a+x /usr/local/bin/phpmd
+# чет прилёг
+#RUN wget -c http://static.phpmd.org/php/latest/phpmd.phar -O /usr/local/bin/phpmd && \
+#    chmod a+x /usr/local/bin/phpmd
 
 # install vue-cli
 RUN npm install -g @vue/cli

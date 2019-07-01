@@ -1,0 +1,34 @@
+{
+    "websocket": {
+        "address": ":8081",
+        "cert_file": "",
+        "key_file": "",
+        "keep_alive": 30,
+        "enable_compression": false,
+        "allow_origins": ["*"]
+    },
+    "rawsocket": {
+        "tcp_address": "",
+        "tcp_keepalive_interval": 180,
+        "unix_address": "",
+        "max_msg_len": 0,
+        "cert_file": "",
+        "key_file": ""
+    },
+    "log_path": "",
+    "router": {
+        "realms": [
+            {
+                "uri": "nexus.realm1",
+                "strict_uri": false,
+                "allow_disclose": true,
+                "anonymous_auth": true,
+                "meta_strict": false,
+                "meta_include_session_details": [],
+                "enable_meta_kill": false,
+                "enable_meta_modify": false
+            }
+        ],
+        "debug": false
+    }
+}
