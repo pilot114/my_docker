@@ -1,6 +1,6 @@
 {
     "websocket": {
-        "address": ":8081",
+        "address": "0.0.0.0:8081",
         "cert_file": "",
         "key_file": "",
         "keep_alive": 30,
@@ -19,7 +19,7 @@
     "router": {
         "realms": [
             {
-                "uri": "nexus.realm1",
+                "uri": "realm1",
                 "strict_uri": false,
                 "allow_disclose": true,
                 "anonymous_auth": true,
