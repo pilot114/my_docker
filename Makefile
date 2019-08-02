@@ -24,6 +24,7 @@ build:
 	@docker build -t pilot114/base-workspace       images/workspace
 	@docker build -t pilot114/base-workspace72     images/workspace72
 	@docker build -t pilot114/base-nexus           images/nexus
+	@docker build -t pilot114/base-stream-vk       images/stream-vk
 
 go:
 	@docker run -it -v $(v):/app -w /app golang bash
@@ -48,6 +49,7 @@ export:
 	@docker save pilot114/base-workspace > $(d)/base-workspace.tar
 	@docker save pilot114/base-workspace72 > $(d)/base-workspace72.tar
 	@docker save pilot114/base-nexus > $(d)/base-nexus.tar
+	@docker save pilot114/base-stream-vk > $(d)/base-stream-vk.tar
 
 import:
 	@docker load < $(d)/base-nginx.tar
@@ -56,6 +58,7 @@ import:
 	@docker load < $(d)/base-workspace.tar
 	@docker load < $(d)/base-workspace72.tar
 	@docker load < $(d)/base-nexus.tar
+	@docker load < $(d)/base-stream-vk.tar
 
 prune:
 	@docker stop $(docker ps -a -q) && docker system prune
@@ -67,3 +70,4 @@ push:
 	@docker push pilot114/base-workspace
 	@docker push pilot114/base-workspace72
 	@docker push pilot114/base-nexus
+	@docker push pilot114/base-stream-vk
