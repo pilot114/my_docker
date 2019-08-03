@@ -10,8 +10,9 @@ import (
 	"net/url"
 	"os/signal"
 	"time"
+	"bytes"
 
-// 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
 
@@ -29,6 +30,19 @@ var (
 	    },
 	}
 )
+
+func CORSMiddleware(c *gin.Context) {
+    c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+    c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+    c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+    c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+
+    if c.Request.Method == "OPTIONS" {
+      c.AbortWithStatus(204)
+      return
+    }
+    c.Next()
+}
 
 func processArgs() (needStop bool) {
 	needStop = true
@@ -86,34 +100,78 @@ func main() {
 		log.Fatal(http.ListenAndServe("0.0.0.0:8888", nil))
 	}()
 
-// 	router := gin.Default()
-// 	router.LoadHTMLFiles("index.html")
-//
-// 	router.GET("/", func(c *gin.Context) {
-// 		c.HTML(http.StatusOK, "index.html", gin.H{
-// 			"title": "VK steaming API",
-// 			"wsHost": "ws://127.0.0.1:8888/stream",
-// 		})
-// 	})
-//
-// 	router.GET("/rule", func(c *gin.Context) {
-// 		c.JSON(200, gin.H{
-// 			"message": "GET",
-// 		})
-// 	})
-// 	router.POST("/rule", func(c *gin.Context) {
-// 		c.JSON(200, gin.H{
-// 			"message": "POST",
-// 		})
-// 	})
-// 	router.DELETE("/rule", func(c *gin.Context) {
-// 		c.JSON(200, gin.H{
-// 			"message": "DELETE",
-// 		})
-// 	})
-// 	go func() {
-// 		router.Run() // listen and serve on 0.0.0.0:8080
-// 	}()
+	router := gin.Default()
+	router.Use(CORSMiddleware)
+
+	// получить список правил
+	router.GET("/rule", func(c *gin.Context) {
+        url := fmt.Sprintf("https://%s/rules/?key=%s", argv.host, argv.key)
+        req, err := http.NewRequest("GET", url, nil)
+
+        client := &http.Client{}
+        resp, err := client.Do(req)
+        if err != nil {
+            log.Fatal("http request error:", err)
+        }
+        defer resp.Body.Close()
+
+        bodyBuf, err := ioutil.ReadAll(resp.Body)
+        if err != nil {
+            log.Fatal("response body read error:", err)
+        }
+
+		c.JSON(200, gin.H{"result": string(bodyBuf)})
+	})
+
+	// создать или удалить правило
+	// GET параметры:
+	// tag, rule
+	router.POST("/rule", func(c *gin.Context) {
+    	get := c.Request.URL.Query()
+
+    	url := fmt.Sprintf("https://%s/rules/?key=%s", argv.host, argv.key)
+
+        if get["rule"] != nil {
+        	json := `{"rule":{"value":"` + get["rule"][0] + `","tag":"` + get["tag"][0] + `"}}`
+        	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(json)))
+        	req.Header.Set("Content-Type", "application/json")
+
+            client := &http.Client{}
+            resp, err := client.Do(req)
+            if err != nil {
+                log.Fatal("http request error:", err)
+            }
+            defer resp.Body.Close()
+
+            bodyBuf, err := ioutil.ReadAll(resp.Body)
+            if err != nil {
+                log.Fatal("response body read error:", err)
+            }
+
+            c.JSON(200, gin.H{"result": string(bodyBuf)})
+        } else {
+            json := `{"tag":"` + get["tag"][0] + `"}`
+            req, err := http.NewRequest("DELETE", url, bytes.NewBuffer([]byte(json)))
+        	req.Header.Set("Content-Type", "application/json")
+
+            client := &http.Client{}
+            resp, err := client.Do(req)
+            if err != nil {
+                log.Fatal("http request error:", err)
+            }
+            defer resp.Body.Close()
+
+            bodyBuf, err := ioutil.ReadAll(resp.Body)
+            if err != nil {
+                log.Fatal("response body read error:", err)
+            }
+
+            c.JSON(200, gin.H{"result": string(bodyBuf)})
+        }
+	})
+	go func() {
+		router.Run(":8889")
+	}()
 
 	// VK ws connect
 	u := url.URL{Scheme: "wss", Host: argv.host, Path: "/stream/", RawQuery: "key=" + argv.key}
