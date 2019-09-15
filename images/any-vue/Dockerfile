@@ -8,60 +8,15 @@ FROM pilot114/workspace72
 # Default to UTF-8 file.encoding
 ENV LANG en_US.UTF-8
 
-ENV JAVA_HOME /usr/local/openjdk-11
-ENV PATH $JAVA_HOME/bin:$PATH
+COPY jdk-11.0.4_linux-x64_bin.tar.gz /var/cache/oracle-jdk11-installer-local/
 
-RUN { echo '#/bin/sh'; echo 'echo "$JAVA_HOME"'; } > /usr/local/bin/docker-java-home && chmod +x /usr/local/bin/docker-java-home && [ "$JAVA_HOME" = "$(docker-java-home)" ]
+RUN echo "oracle-java11-installer-local shared/accepted-oracle-license-v1-2 select true" | debconf-set-selections
+RUN add-apt-repository ppa:linuxuprising/java && apt-get update -y
 
-ENV JAVA_VERSION 11.0.4
-ENV JAVA_BASE_URL https://github.com/AdoptOpenJDK/openjdk11-upstream-binaries/releases/download/jdk-11.0.4%2B11/OpenJDK11U-jdk_
-ENV JAVA_URL_VERSION 11.0.4_11
+RUN apt install oracle-java11-installer-local -y && \
+    apt install oracle-java11-set-default-local -y
 
-RUN set -eux; \
-	dpkgArch="$(dpkg --print-architecture)"; \
-	case "$dpkgArch" in \
-		amd64) upstreamArch='x64' ;; \
-		arm64) upstreamArch='aarch64' ;; \
-		*) echo >&2 "error: unsupported architecture: $dpkgArch" ;; \
-	esac; \
-	wget -O openjdk.tgz.asc "${JAVA_BASE_URL}${upstreamArch}_linux_${JAVA_URL_VERSION}.tar.gz.sign"; \
-	wget -O openjdk.tgz "${JAVA_BASE_URL}${upstreamArch}_linux_${JAVA_URL_VERSION}.tar.gz" --progress=dot:giga; \
-	\
-	export GNUPGHOME="$(mktemp -d)"; \
-	gpg --batch --keyserver ha.pool.sks-keyservers.net --keyserver-options no-self-sigs-only --recv-keys CA5F11C6CE22644D42C6AC4492EF8D39DC13168F; \
-	gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys EAC843EBD3EFDB98CC772FADA5CD6035332FA671; \
-	gpg --batch --list-sigs --keyid-format 0xLONG CA5F11C6CE22644D42C6AC4492EF8D39DC13168F \
-		| tee /dev/stderr \
-		| grep '0xA5CD6035332FA671' \
-		| grep 'Andrew Haley'; \
-	gpg --batch --verify openjdk.tgz.asc openjdk.tgz; \
-	gpgconf --kill all; \
-	rm -rf "$GNUPGHOME";
-
-RUN	mkdir -p "$JAVA_HOME"; \
-	tar --extract \
-		--file openjdk.tgz \
-		--directory "$JAVA_HOME" \
-		--strip-components 1 \
-		--no-same-owner \
-	; \
-	rm openjdk.tgz*; \
-	{ \
-		echo '#!/usr/bin/env bash'; \
-		echo 'set -Eeuo pipefail'; \
-		echo 'if ! [ -d "$JAVA_HOME" ]; then echo >&2 "error: missing JAVA_HOME environment variable"; exit 1; fi'; \
-		echo 'cacertsFile=; for f in "$JAVA_HOME/lib/security/cacerts" "$JAVA_HOME/jre/lib/security/cacerts"; do if [ -e "$f" ]; then cacertsFile="$f"; break; fi; done'; \
-		echo 'if [ -z "$cacertsFile" ] || ! [ -f "$cacertsFile" ]; then echo >&2 "error: failed to find cacerts file in $JAVA_HOME"; exit 1; fi'; \
-		echo 'trust extract --overwrite --format=java-cacerts --filter=ca-anchors --purpose=server-auth "$cacertsFile"'; \
-	} > /etc/ca-certificates/update.d/docker-openjdk; \
-	chmod +x /etc/ca-certificates/update.d/docker-openjdk; \
-	/etc/ca-certificates/update.d/docker-openjdk; \
-	\
-	find "$JAVA_HOME/lib" -name '*.so' -exec dirname '{}' ';' | sort -u > /etc/ld.so.conf.d/docker-openjdk.conf; \
-	ldconfig; \
-	javac --version; \
-	java --version
-
+ENV JAVA_HOME /usr/lib/jvm/java-11-oracle
 
 #################################################################################
 #  install SDK Platform Android 8.0.0, API 26
@@ -124,3 +79,12 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
         apt-get autoremove -y && \
         apt-get clean
 WORKDIR "/app"
+
+# java overide to 8 version - for cordova  (((((
+COPY jdk-8u221-linux-x64.tar.gz /tmp
+RUN cd /usr/lib/jvm && tar -xvzf /tmp/jdk-8u221-linux-x64.tar.gz
+RUN rm -R /usr/lib/jvm/java-11-oracle && \
+    update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk1.8.0_221/bin/java 100 && \
+    update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk1.8.0_221/bin/javac 100
+
+ENV JAVA_HOME /usr/lib/jvm/jdk1.8.0_221
