@@ -8,7 +8,8 @@ FROM pilot114/workspace72
 # Default to UTF-8 file.encoding
 ENV LANG en_US.UTF-8
 
-COPY jdk-11.0.4_linux-x64_bin.tar.gz /var/cache/oracle-jdk11-installer-local/
+# need download from https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html
+COPY jdk-11.0.6_linux-x64_bin.tar.gz /var/cache/oracle-jdk11-installer-local/
 
 RUN echo "oracle-java11-installer-local shared/accepted-oracle-license-v1-2 select true" | debconf-set-selections
 RUN add-apt-repository ppa:linuxuprising/java && apt-get update -y
@@ -63,28 +64,30 @@ RUN npm i -g --unsafe-perm cordova@${CORDOVA_VERSION}
 #  install wine and libs for run electron builds (electron-packager)
 #################################################################################
 
-RUN apt-get -qq update && \
-    npm install electron-packager -g
-USER workspace
-RUN yarn global add @vue/cli-init
-USER root
+# Это всё говнина
 
-RUN apt-get -qq install -y libgtk-3-0 libx11-xcb1 libxss1 libgconf-2-4
-
-RUN wget -qO - https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add - && \
-    sudo apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ bionic main' && apt-get update && \
-    apt-get install -y --install-recommends winehq-stable && wine --version
-
-RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-        apt-get autoremove -y && \
-        apt-get clean
-WORKDIR "/app"
-
-# java overide to 8 version - for cordova  (((((
-COPY jdk-8u221-linux-x64.tar.gz /tmp
-RUN cd /usr/lib/jvm && tar -xvzf /tmp/jdk-8u221-linux-x64.tar.gz
-RUN rm -R /usr/lib/jvm/java-11-oracle && \
-    update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk1.8.0_221/bin/java 100 && \
-    update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk1.8.0_221/bin/javac 100
-
-ENV JAVA_HOME /usr/lib/jvm/jdk1.8.0_221
+#RUN apt-get -qq update && \
+#    npm install electron-packager -g
+#USER workspace
+#RUN yarn global add @vue/cli-init
+#USER root
+#
+#RUN apt-get -qq install -y libgtk-3-0 libx11-xcb1 libxss1 libgconf-2-4
+#
+#RUN wget -qO - https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add - && \
+#    sudo apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ bionic main' && apt-get update && \
+#    apt-get install -y --install-recommends winehq-stable && wine --version
+#
+#RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+#        apt-get autoremove -y && \
+#        apt-get clean
+#WORKDIR "/app"
+#
+## java overide to 8 version - for cordova  (((((
+#COPY jdk-8u221-linux-x64.tar.gz /tmp
+#RUN cd /usr/lib/jvm && tar -xvzf /tmp/jdk-8u221-linux-x64.tar.gz
+#RUN rm -R /usr/lib/jvm/java-11-oracle && \
+#    update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk1.8.0_221/bin/java 100 && \
+#    update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk1.8.0_221/bin/javac 100
+#
+#ENV JAVA_HOME /usr/lib/jvm/jdk1.8.0_221

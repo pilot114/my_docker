@@ -132,7 +132,7 @@ RUN rm -f /etc/service/sshd/down && mkdir /home/workspace/.ssh && \
     && chown -R workspace:workspace /home/workspace/.ssh
 
 # install nodejs
-RUN apt-get install -y wget && wget -qO- https://deb.nodesource.com/setup_8.x | sudo -E bash - && \
+RUN apt-get install -y wget && wget -qO- https://deb.nodesource.com/setup_12.x | sudo -E bash - && \
     apt-get install -y nodejs build-essential
 
 # global codecept, phpunit, webpack, phpmd
@@ -142,8 +142,8 @@ RUN wget https://phar.phpunit.de/phpunit-6.phar -O /usr/local/bin/phpunit && \
     chmod a+x /usr/local/bin/phpunit
 RUN npm install --global webpack webpack-cli
 # чет прилёг
-#RUN wget -c http://static.phpmd.org/php/latest/phpmd.phar -O /usr/local/bin/phpmd && \
-#    chmod a+x /usr/local/bin/phpmd
+RUN wget -c https://phpmd.org/static/latest/phpmd.phar -O /usr/local/bin/phpmd && \
+    chmod a+x /usr/local/bin/phpmd
 
 # install vue-cli
 RUN npm install -g @vue/cli
