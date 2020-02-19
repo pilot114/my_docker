@@ -23,6 +23,7 @@ build:
 	@docker build -t pilot114/php-wshell      images/php-wshell
 	@docker build -t pilot114/workspace       images/workspace
 	@docker build -t pilot114/workspace72     images/workspace72
+	@docker build -t pilot114/workspace73     images/workspace73
 	@docker build -t pilot114/nexus           images/nexus
 	@docker build -t pilot114/stream-vk       images/stream-vk
 	@docker build -t pilot114/any-vue         images/any-vue
@@ -49,6 +50,7 @@ export:
 	@docker save pilot114/php-wshell > $(d)/php-wshell.tar
 	@docker save pilot114/workspace > $(d)/workspace.tar
 	@docker save pilot114/workspace72 > $(d)/workspace72.tar
+	@docker save pilot114/workspace72 > $(d)/workspace73.tar
 	@docker save pilot114/nexus > $(d)/nexus.tar
 	@docker save pilot114/stream-vk > $(d)/stream-vk.tar
 	@docker save pilot114/any-vue > $(d)/any-vue.tar
@@ -59,6 +61,7 @@ import:
 	@docker load < $(d)/php-wshell.tar
 	@docker load < $(d)/workspace.tar
 	@docker load < $(d)/workspace72.tar
+	@docker load < $(d)/workspace73.tar
 	@docker load < $(d)/nexus.tar
 	@docker load < $(d)/stream-vk.tar
 	@docker load < $(d)/any-vue.tar
@@ -72,6 +75,7 @@ push:
 	@docker push pilot114/php-wshell
 	@docker push pilot114/workspace
 	@docker push pilot114/workspace72
+	@docker push pilot114/workspace73
 	@docker push pilot114/nexus
 	@docker push pilot114/stream-vk
 	@docker push pilot114/any-vue
