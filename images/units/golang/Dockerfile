@@ -1,10 +1,10 @@
 # COPY . /go/src/app
 # RUN go get -d -v
 # RUN go install -v
-FROM golang:1.6-onbuild
+FROM golang:1.15
 
 # OR (WITHOUT ONBUILD):
-# FROM golang:1.6
+# FROM golang:1.15
 
 # USAGE
 # docker build -t wshell-golang .

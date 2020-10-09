@@ -6,7 +6,7 @@
 # - образ "съедает" всего 6Mb RAM
 # - можно добавлять своих демонов
 
-FROM phusion/baseimage:0.11
+FROM phusion/baseimage:18.04-1.0.0
 
 MAINTAINER Oleg Chulkov pilot114@bk.ru
 
@@ -135,7 +135,7 @@ RUN rm -f /etc/service/sshd/down && mkdir /home/workspace/.ssh && \
     && chown -R workspace:workspace /home/workspace/.ssh
 
 # install nodejs
-RUN apt-get install -y wget && wget -qO- https://deb.nodesource.com/setup_12.x | sudo -E bash - && \
+RUN apt-get install -y wget && wget -qO- https://deb.nodesource.com/setup_14.x | sudo -E bash - && \
     apt-get install -y nodejs build-essential
 
 # global codecept, phpunit, webpack, phpmd
@@ -150,10 +150,10 @@ RUN wget -c https://phpmd.org/static/latest/phpmd.phar -O /usr/local/bin/phpmd &
 
 
 # install vue-cli
-RUN npm install -g @vue/cli
+RUN npm i -g @vue/cli
 
 # для laravel-mix
-RUN npm install --global cross-env
+RUN npm i --global cross-env
 
 # Очистка
 RUN apt-get clean && \

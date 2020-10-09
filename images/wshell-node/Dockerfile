@@ -1,4 +1,4 @@
-FROM golang:1.6
+FROM golang:1.15
 
 ADD modules /go/src/github.com/pilot114/node/modules
 RUN go get github.com/gammazero/nexus/client
