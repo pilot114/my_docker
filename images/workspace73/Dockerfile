@@ -135,7 +135,7 @@ RUN rm -f /etc/service/sshd/down && mkdir /home/workspace/.ssh && \
     && chown -R workspace:workspace /home/workspace/.ssh
 
 # install nodejs
-RUN apt-get install -y wget && wget -qO- https://deb.nodesource.com/setup_14.x | sudo -E bash - && \
+RUN apt-get install -y wget && wget -qO- https://deb.nodesource.com/setup_12.x | sudo -E bash - && \
     apt-get install -y nodejs build-essential
 
 # global codecept, phpunit, webpack, phpmd
