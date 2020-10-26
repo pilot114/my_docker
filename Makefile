@@ -26,6 +26,10 @@ build:
 	@docker build -t pilot114/stream-vk       images/stream-vk
 	@docker build -t pilot114/task_dealer     images/task_dealer
 	@docker build -t pilot114/scanner     	  images/scanner
+	@docker build -t pilot114/php8     	      images/php8
+
+php8:
+	@docker run -it --rm -v ${PWD}/images/php8/examples:/app -w /app pilot114/php8 sh
 
 go:
 	@docker run -it -v $(v):/app -w /app golang bash
