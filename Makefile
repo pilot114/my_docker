@@ -26,7 +26,8 @@ build:
 	@docker build -t pilot114/stream-vk       images/stream-vk
 	@docker build -t pilot114/task_dealer     images/task_dealer
 	@docker build -t pilot114/scanner     	  images/scanner
-	@docker build -t pilot114/php8     	      images/php8
+	@docker build -t pilot114/php8     	  images/php8
+	@docker build -t pilot114/kali            images/kali
 
 php8:
 	@docker run -it --rm -v ${PWD}/images/php8/examples:/app -w /app pilot114/php8 sh
@@ -56,6 +57,7 @@ export:
 	@docker save pilot114/stream-vk > $(d)/stream-vk.tar
 	@docker save pilot114/task_dealer > $(d)/task_dealer.tar
 	@docker save pilot114/scanner > $(d)/scanner.tar
+	@docker save pilot114/kali > $(d)/kali.tar
 
 import:
 	@docker load < $(d)/nginx.tar
@@ -66,6 +68,7 @@ import:
 	@docker load < $(d)/stream-vk.tar
 	@docker load < $(d)/task_dealer.tar
 	@docker load < $(d)/scanner.tar
+	@docker load < $(d)/kali.tar
 
 prune:
 	@docker stop `docker ps -a -q` && docker system prune
@@ -79,3 +82,4 @@ push:
 	@docker push pilot114/stream-vk
 	@docker push pilot114/task_dealer
 	@docker push pilot114/scanner
+	@docker push pilot114/kali
