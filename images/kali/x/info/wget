@@ -1,0 +1,3 @@
+
+# download preview page, anyway
+wget -q -p -k --no-check-certificate -F --content-on-error 46.20.207.50

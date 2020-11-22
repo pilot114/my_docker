@@ -1,0 +1,26 @@
+
+# perf on local network
+masscan 0.0.0.0/4 -p80 --rate 100000000 --router-mac 66-55-44-33-22-11
+# perf on localhost
+masscan 0.0.0.0/4 -p80 --rate 100000000 --offline
+
+# set ports and CIDRs
+masscan -p80,8000-8100 10.0.0.0/8
+
+# create & use config. Its simple options list. default location: /etc/masscan/masscan.conf
+masscan -p80,8000-8100 10.0.0.0/8 --echo > xxx.conf
+masscan -c xxx.conf --rate 1000
+
+# for grab banners need prevent local TCP/IP stack
+iptables -A INPUT -p tcp --dport 61000 -j DROP
+masscan 10.0.0.0/8 -p80 --banners --source-port 61000
+
+# blacklist
+masscan 0.0.0.0/0 -p0-65535 --excludefile exclude.txt
+# more speed!
+masscan 0.0.0.0/0 -p0-65535 --max-rate 100000
+
+# save results to file (X - xml, J - json, G - grepable, L - simple list).
+# and binary, read: --readscan
+masscan 0.0.0.0/0 -p0-65535 -oX scan.xml
+

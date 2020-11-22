@@ -1,0 +1,3 @@
+
+# test.png -> file name to be saved 1920px -> the resolution of the target picture 2000 -> the time to wait in ms 1 -> the page zoom factor
+docker run --rm -v $PWD:/srv lifenz/docker-screenshot https://google.com test.png 1920px 2000 1

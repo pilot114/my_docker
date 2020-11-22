@@ -1,0 +1,22 @@
+# VM for testing vulnerabilities
+https://github.com/rapid7/metasploitable3
+# MP list
+https://tools.kali.org/kali-metapackages
+# speed test
+curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -
+
+# zone info
+https://zonefiles.io/list/ru/
+
+# ASN & CIDR
+https://wiki.merionet.ru/servernye-resheniya/57/10-onlajn-instrumentov-dlya-raboty-s-asn/
+https://whois.ipip.net/countries
+https://purplepee.co/
+
+# run chrome
+docker run -p 3000:3000 browserless/chrome
+
+# check count process by name
+pgrep chrome | wc -l
+# kill processes by name
+ps -ef | grep 'chrome' | grep -v grep | awk '{print $2}' | xargs -r kill -9
