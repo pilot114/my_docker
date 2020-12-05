@@ -30,7 +30,7 @@ build:
 	@docker build -t pilot114/kali            images/kali
 
 php8:
-	@docker run -it --rm -v ${PWD}/images/php8/examples:/app -w /app pilot114/php8 sh
+	@docker run -it --rm -v ${PWD}/images/php8/examples:/app -w /app pilot114/php8 bash
 
 go:
 	@docker run -it -v $(v):/app -w /app golang bash
