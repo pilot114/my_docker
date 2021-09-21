@@ -36,22 +36,22 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
 RUN apt-get update && \
     apt-get install -y --allow-downgrades --allow-remove-essential \
         --allow-change-held-packages \
-        php7.3-cli \
-        php7.3-common \
-        php7.3-curl \
-        php7.3-intl \
-        php7.3-json \
-        php7.3-xml \
-        php7.3-mbstring \
-        php7.3-mysql \
-        php7.3-pgsql \
-        php7.3-sqlite \
-        php7.3-sqlite3 \
-        php7.3-zip \
-        php7.3-bcmath \
-        php7.3-memcached \
-        php7.3-gd \
-        php7.3-dev \
+        php8.0-cli \
+        php8.0-common \
+        php8.0-curl \
+        php8.0-intl \
+        php8.0-json \
+        php8.0-xml \
+        php8.0-mbstring \
+        php8.0-mysql \
+        php8.0-pgsql \
+        php8.0-sqlite \
+        php8.0-sqlite3 \
+        php8.0-zip \
+        php8.0-bcmath \
+        php8.0-memcached \
+        php8.0-gd \
+        php8.0-dev \
         pkg-config \
         libcurl4-openssl-dev \
         libedit-dev \
@@ -75,7 +75,7 @@ RUN apt-get update && \
 
 # обновляем кэш pecl
 RUN pecl channel-update pecl.php.net
-RUN pecl install mongodb && echo 'extension=mongodb.so' >> /etc/php/7.3/cli/php.ini
+RUN pecl install mongodb && echo 'extension=mongodb.so' >> /etc/php/8.0/cli/php.ini
 
 # composer
 RUN curl -s http://getcomposer.org/installer | php && \
@@ -110,7 +110,6 @@ USER workspace
 RUN curl -fsSL https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | zsh || true
 
 # алиасы
-# TODO: добавить алисы для git, когда достаточно хорошо пойму что нужно
 COPY ./aliases.sh /home/workspace/aliases.sh
 
 RUN sed -i 's/\r//' /home/workspace/aliases.sh && \
@@ -138,22 +137,10 @@ RUN rm -f /etc/service/sshd/down && mkdir /home/workspace/.ssh && \
 RUN apt-get install -y wget && wget -qO- https://deb.nodesource.com/setup_14.x | sudo -E bash - && \
     apt-get install -y nodejs build-essential
 
-# global codecept, phpunit, webpack, phpmd
-RUN curl -LsS https://codeception.com/codecept.phar -o /usr/local/bin/codecept && \
-    chmod a+x /usr/local/bin/codecept
-RUN wget https://phar.phpunit.de/phpunit-6.phar -O /usr/local/bin/phpunit && \
-    chmod a+x /usr/local/bin/phpunit
 RUN npm install --global webpack webpack-cli
-# чет прилёг
-RUN wget -c https://phpmd.org/static/latest/phpmd.phar -O /usr/local/bin/phpmd && \
-    chmod a+x /usr/local/bin/phpmd
-
 
 # install vue-cli
 RUN npm i -g @vue/cli
-
-# для laravel-mix
-RUN npm i --global cross-env
 
 # Очистка
 RUN apt-get clean && \
