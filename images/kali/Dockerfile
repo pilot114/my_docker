@@ -6,8 +6,7 @@ RUN apt-get update
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
 RUN apt-get install -y -q kali-linux-default
-RUN apt-get install -y -q \
-	nano htop
+RUN apt-get install -y -q nano htop
 
 # fix masscan: issue #144
 WORKDIR /root
