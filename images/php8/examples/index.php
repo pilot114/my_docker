@@ -11,5 +11,14 @@ echo "###\n";
 $i->printGroupByModules();
 echo "###\n";
 
-$i->printTree('standard', ['_']);
-echo "###\n";
+//$i->printTree('standard', ['_']);
+//echo "###\n";
+
+$meta = $i->metaInfoByNames([
+    'array_change_key_case',
+    'array_chunk',
+    'array_column',
+]);
+
+dump($meta->toArray());
+die();

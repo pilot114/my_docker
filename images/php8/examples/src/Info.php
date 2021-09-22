@@ -2,6 +2,10 @@
 
 namespace Pilot114\Php8;
 
+use Pilot114\Php8\Types\Config;
+use Pilot114\Php8\Types\Extension;
+use Typing\Type;
+
 class Info
 {
     public function default()
@@ -47,6 +51,21 @@ class Info
         $tree->setData($functionsFlat, $delimiters);
         $result = $tree->foldByPrefixes();
         $this->printDump($result);
+    }
+
+    public function metaInfoByNames(array $names): Config
+    {
+        $config = new Config();
+        foreach ($names as $name) {
+            $meta = (new Reflection())->getFunctionMeta($name);
+            if (!isset($config->extensions[$meta->extension])) {
+                $config->extensions[$meta->extension] = new Extension();
+                $config->extensions[$meta->extension]->name = $meta->name;
+            }
+            $config->extensions[$meta->extension]->funcs[] = $meta;
+        }
+
+        return $config;
     }
 
     /**

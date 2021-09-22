@@ -6,7 +6,16 @@
             "Pilot114\\Php8\\": "src/"
         }
     },
+    "require": {
+        "sibvaleo/typing": "0.1.1"
+    },
     "require-dev": {
         "symfony/var-dumper": "^5.3"
-    }
+    },
+    "repositories":[
+        {
+            "type": "git",
+            "url": "git@192.168.6.29:portal/typing.git"
+        }
+    ]
 }

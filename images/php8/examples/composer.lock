@@ -4,8 +4,40 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f7763ebcdfb06963653134f83b188255",
-    "packages": [],
+    "content-hash": "013844d47db5941cd2a59b0c2f1b63f2",
+    "packages": [
+        {
+            "name": "sibvaleo/typing",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "git@192.168.6.29:portal/typing.git",
+                "reference": "0fdcd362afc185c26f0732ef8ccf99171880c758"
+            },
+            "require": {
+                "ext-json": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.4",
+                "symfony/var-dumper": "^5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Typing\\": "src/",
+                    "Tests\\": "tests/"
+                }
+            },
+            "authors": [
+                {
+                    "name": "Oleg Chulkov",
+                    "email": "pilot114@bk.ru"
+                }
+            ],
+            "description": "types and collections for php",
+            "time": "2021-09-22T15:59:45+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "symfony/polyfill-mbstring",
@@ -266,5 +298,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.0.0"
 }
