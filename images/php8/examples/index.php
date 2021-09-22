@@ -1,14 +1,15 @@
 <?php
 
-require __DIR__ . '/info.php';
-require __DIR__ . '/openssl.php';
+include './vendor/autoload.php';
 
-[$functions, $constants, $modules] = getRuntimeInfo();
-printLibInfo($functions, $constants, $modules);
+$i = new \Pilot114\Php8\Info();
 
-$groups = getFunctionInfoGroupByModules($modules);
-printGroupByModules($groups);
+echo "###\n";
+$i->printInternalInfo();
+echo "###\n";
 
-//sort($groups['openssl']);
-//var_dump($groups['openssl']);
+$i->printGroupByModules();
+echo "###\n";
 
+$i->printTree('standard', ['_']);
+echo "###\n";
