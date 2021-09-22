@@ -11,14 +11,12 @@ echo "###\n";
 $i->printGroupByModules();
 echo "###\n";
 
-//$i->printTree('standard', ['_']);
+//$i->printTree(['standard'], ['_']);
 //echo "###\n";
 
-$meta = $i->metaInfoByNames([
-    'array_change_key_case',
-    'array_chunk',
-    'array_column',
-]);
+$fns = $i->getAllFunctions();
+$fns = $fns->filter(fn($x) => str_contains($x, 'array_'))->toArray();
+$meta = \Pilot114\Php8\Reflection::metaInfoByNames($fns);
 
-dump($meta->toArray());
-die();
+$yaml = \Symfony\Component\Yaml\Yaml::dump($meta->toArray(), 6);
+file_put_contents('./config/meta.yaml', $yaml);

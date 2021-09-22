@@ -7,11 +7,9 @@ use Typing\Type;
 class Param extends Type
 {
     public string $name;
-    public bool $isNull;
     public array $types;
-
-    public function __construct($array = [])
-    {
-        parent::__construct($array);
-    }
+    public bool $isNull;
+    // если переменное число параметров
+    public bool $isVariadic = false;
+    public bool $byReference = false;
 }

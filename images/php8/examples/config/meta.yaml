@@ -1,0 +1,371 @@
+extensions:
+    standard:
+        funcs:
+            array_push:
+                params:
+                    array: { isVariadic: false, byReference: true }
+                    values: { isVariadic: true, byReference: false }
+                return:
+                    types: [int]
+                    isNull: false
+            array_walk:
+                params:
+                    array: { isVariadic: false, byReference: true }
+                    callback: { types: [callable], isNull: false, isVariadic: false, byReference: false }
+                    arg: { types: [mixed], isNull: true, isVariadic: false, byReference: false }
+                return:
+                    types: [bool]
+                    isNull: false
+            array_walk_recursive:
+                params:
+                    array: { isVariadic: false, byReference: true }
+                    callback: { types: [callable], isNull: false, isVariadic: false, byReference: false }
+                    arg: { types: [mixed], isNull: true, isVariadic: false, byReference: false }
+                return:
+                    types: [bool]
+                    isNull: false
+            array_search:
+                params:
+                    needle: { types: [mixed], isNull: true, isVariadic: false, byReference: false }
+                    haystack: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    strict: { types: [bool], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [string, int, 'false']
+                    isNull: false
+            array_fill:
+                params:
+                    start_index: { types: [int], isNull: false, isVariadic: false, byReference: false }
+                    count: { types: [int], isNull: false, isVariadic: false, byReference: false }
+                    value: { types: [mixed], isNull: true, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_fill_keys:
+                params:
+                    keys: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    value: { types: [mixed], isNull: true, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_pop:
+                params:
+                    array: { isVariadic: false, byReference: true }
+                return:
+                    types: [mixed]
+                    isNull: true
+            array_shift:
+                params:
+                    array: { isVariadic: false, byReference: true }
+                return:
+                    types: [mixed]
+                    isNull: true
+            array_unshift:
+                params:
+                    array: { isVariadic: false, byReference: true }
+                    values: { isVariadic: true, byReference: false }
+                return:
+                    types: [int]
+                    isNull: false
+            array_splice:
+                params:
+                    array: { isVariadic: false, byReference: true }
+                    offset: { types: [int], isNull: false, isVariadic: false, byReference: false }
+                    length: { types: [int], isNull: true, isVariadic: false, byReference: false }
+                    replacement: { types: [mixed], isNull: true, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_slice:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    offset: { types: [int], isNull: false, isVariadic: false, byReference: false }
+                    length: { types: [int], isNull: true, isVariadic: false, byReference: false }
+                    preserve_keys: { types: [bool], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_merge:
+                params:
+                    arrays: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_merge_recursive:
+                params:
+                    arrays: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_replace:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    replacements: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_replace_recursive:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    replacements: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_keys:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    filter_value: { types: [mixed], isNull: true, isVariadic: false, byReference: false }
+                    strict: { types: [bool], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_key_first:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [string, int]
+                    isNull: true
+            array_key_last:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [string, int]
+                    isNull: true
+            array_values:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_count_values:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_column:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    column_key: { types: [string, int], isNull: false, isVariadic: false, byReference: false }
+                    index_key: { types: [string, int], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_reverse:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    preserve_keys: { types: [bool], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_pad:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    length: { types: [int], isNull: false, isVariadic: false, byReference: false }
+                    value: { types: [mixed], isNull: true, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_flip:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_change_key_case:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    case: { types: [int], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_unique:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    flags: { types: [int], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_intersect_key:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    arrays: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_intersect_ukey:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    rest: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_intersect:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    arrays: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_uintersect:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    rest: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_intersect_assoc:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    arrays: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_uintersect_assoc:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    rest: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_intersect_uassoc:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    rest: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_uintersect_uassoc:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    rest: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_diff_key:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    arrays: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_diff_ukey:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    rest: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_diff:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    arrays: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_udiff:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    rest: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_diff_assoc:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    arrays: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_diff_uassoc:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    rest: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_udiff_assoc:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    rest: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_udiff_uassoc:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    rest: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_multisort:
+                params:
+                    array: { isVariadic: false, byReference: true }
+                    rest: { isVariadic: true, byReference: false }
+                return:
+                    types: [bool]
+                    isNull: false
+            array_rand:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    num: { types: [int], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [array, string, int]
+                    isNull: false
+            array_sum:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [int, float]
+                    isNull: false
+            array_product:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [int, float]
+                    isNull: false
+            array_reduce:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    callback: { types: [callable], isNull: false, isVariadic: false, byReference: false }
+                    initial: { types: [mixed], isNull: true, isVariadic: false, byReference: false }
+                return:
+                    types: [mixed]
+                    isNull: true
+            array_filter:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    callback: { types: [callable], isNull: true, isVariadic: false, byReference: false }
+                    mode: { types: [int], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_map:
+                params:
+                    callback: { types: [callable], isNull: true, isVariadic: false, byReference: false }
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    arrays: { isVariadic: true, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_key_exists:
+                params:
+                    key: { isVariadic: false, byReference: false }
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [bool]
+                    isNull: false
+            array_chunk:
+                params:
+                    array: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    length: { types: [int], isNull: false, isVariadic: false, byReference: false }
+                    preserve_keys: { types: [bool], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false
+            array_combine:
+                params:
+                    keys: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                    values: { types: [array], isNull: false, isVariadic: false, byReference: false }
+                return:
+                    types: [array]
+                    isNull: false

@@ -7,7 +7,6 @@ use Typing\Type;
 
 class Extension extends Type
 {
-    public string $name;
     /**
      * @var Func[]
      */

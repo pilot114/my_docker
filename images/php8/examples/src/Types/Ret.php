@@ -6,6 +6,6 @@ use Typing\Type;
 
 class Ret extends Type
 {
-    public string $type;
+    public array $types;
     public bool $isNull;
 }

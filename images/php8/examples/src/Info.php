@@ -2,9 +2,7 @@
 
 namespace Pilot114\Php8;
 
-use Pilot114\Php8\Types\Config;
-use Pilot114\Php8\Types\Extension;
-use Typing\Type;
+use Typing\Collection;
 
 class Info
 {
@@ -12,6 +10,16 @@ class Info
     {
         phpinfo();
         phpcredits();
+    }
+
+    public function getAllFunctions(array $modules = null): Collection
+    {
+        $grouped = $this->getFunctionInfoGroupByModules($modules ?? $this->getInternalInfo()[2]);
+        $functionsFlat = [];
+        foreach ($grouped as $group) {
+            $functionsFlat = array_merge($functionsFlat, is_array($group) ? $group : []);
+        }
+        return new Collection($functionsFlat);
     }
 
     /**
@@ -38,34 +46,14 @@ class Info
         }
     }
 
-    public function printTree(string $moduleName = null, array $delimiters = [])
+    public function printTree(array $modules = null, array $delimiters = [])
     {
-        $moduleList = $moduleName ? [$moduleName] : $this->getInternalInfo()[2];
-        $tree = new PrefixTree();
+        $functionsFlat = $this->getAllFunctions($modules);
 
-        $functions = $this->getFunctionInfoGroupByModules($moduleList);
-        $functionsFlat = [];
-        foreach ($functions as $fs) {
-            $functionsFlat = array_merge($functionsFlat, is_array($fs) ? $fs : []);
-        }
-        $tree->setData($functionsFlat, $delimiters);
+        $tree = new PrefixTree();
+        $tree->setData($functionsFlat->toArray(), $delimiters);
         $result = $tree->foldByPrefixes();
         $this->printDump($result);
-    }
-
-    public function metaInfoByNames(array $names): Config
-    {
-        $config = new Config();
-        foreach ($names as $name) {
-            $meta = (new Reflection())->getFunctionMeta($name);
-            if (!isset($config->extensions[$meta->extension])) {
-                $config->extensions[$meta->extension] = new Extension();
-                $config->extensions[$meta->extension]->name = $meta->name;
-            }
-            $config->extensions[$meta->extension]->funcs[] = $meta;
-        }
-
-        return $config;
     }
 
     /**
