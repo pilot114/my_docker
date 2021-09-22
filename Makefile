@@ -23,7 +23,7 @@ push:
 	@php -f ./scripts/push.php $(i)
 
 prune:
-	@docker stop `docker ps -a -q` && docker system prune
+	@docker stop `docker ps -a -q` && docker system prune -a
 
 nginx:
 	@docker run --rm --name my-nginx -d -p 8080:80 \
