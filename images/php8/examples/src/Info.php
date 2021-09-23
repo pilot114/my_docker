@@ -6,10 +6,12 @@ use Typing\Collection;
 
 class Info
 {
-    public function default()
+    public function default($ext = null)
     {
         phpinfo();
         phpcredits();
+        echo zend_version();
+        echo phpversion($ext);
     }
 
     public function getAllFunctions(array $modules = null): Collection
