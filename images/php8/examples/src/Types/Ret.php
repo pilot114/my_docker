@@ -7,5 +7,5 @@ use Typing\Type;
 class Ret extends Type
 {
     public array $types;
-    public bool $isNull;
+    public bool $isNull = false;
 }
