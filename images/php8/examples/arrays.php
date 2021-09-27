@@ -35,8 +35,18 @@ $all = \Pilot114\Php8\Arrays::data();
 //    array_unshift($arr, 1, 2);
 //    \Pilot114\Php8\Arrays::state("array_unshift($name)", $arr);
 //}
+//foreach ($all as $name => $arr) {
+//    // выбрать часть массива
+//    \Pilot114\Php8\Arrays::state("array_slice($name, 1, 2)", array_slice($arr, 1, 2));
+//}
+//foreach ($all as $name => $arr) {
+//    // вырезать (и вставить) по смещению
+//    array_splice($arr, 1, 1, [1, 2]);
+//    \Pilot114\Php8\Arrays::state("array_splice($name, 1, 1, [1, 2])", $arr);
+//}
 foreach ($all as $name => $arr) {
-    // вырезать (и вставить) по смещению
-    array_splice($arr, 1, 1, [1, 2]);
-    \Pilot114\Php8\Arrays::state("array_splice($name, 1, 1, [1, 2])", $arr);
+    // 2 параметром можно указать значение для поиска (+ strict для этого поиска)
+    \Pilot114\Php8\Arrays::state("array_search(7, $name)", array_search(7, $arr));
+    // кстати, array_keys c параметрами делает тоже самое
+    \Pilot114\Php8\Arrays::state("array_keys($name, 7)", array_keys($arr, 7));
 }
