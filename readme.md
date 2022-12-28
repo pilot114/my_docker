@@ -1,3 +1,16 @@
+### usefully aliases
+
+PREFIX='docker run --rm -it -v "$PWD":/app -w /app -u $(id -u):$(id -g)'
+
+alias   node='eval $PREFIX node:19.3.0-alpine3.17 node'
+alias    php='eval $PREFIX php:8.2.0-cli-alpine3.17 php'
+alias python='eval $PREFIX python:3.11.1-alpine3.17 python'
+alias     go='eval $PREFIX golang:1.19.4-alpine3.17 go'
+
+alias    npm='eval $PREFIX node:19.3.0-alpine3.17 npm'
+alias      c='eval $PREFIX composer:2.5.1 composer'
+
+
 ### Overview
 
 Docker образы на типовый случаи, а также для демок.
