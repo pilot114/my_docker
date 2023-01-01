@@ -3,7 +3,7 @@
     PREFIX='docker run --rm -it -v "$PWD":/app -w /app -u $(id -u):$(id -g)'
 
     alias   node='eval $PREFIX node:19.3.0-alpine3.17 node'
-    alias    php='eval $PREFIX php:8.2.0-cli-alpine3.17 php'
+    alias    php='eval $PREFIX --init php:8.2.0-cli-alpine3.17 php' # --init for correct handle ctrl+C
     alias python='eval $PREFIX python:3.11.1-alpine3.17 python'
     alias     go='eval $PREFIX golang:1.19.4-alpine3.17 go'
 
