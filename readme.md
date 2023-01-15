@@ -8,6 +8,7 @@
     alias     go='eval $PREFIX golang:1.19.4-alpine3.17 go'
 
     alias      npm='eval $PREFIX node:19.3.0-alpine3.17 npm'
+    alias      npx='eval $PREFIX node:19.3.0-alpine3.17 npx'
     alias composer='eval $PREFIX composer:2.5.1 composer'
     alias      pip='eval $PREFIX python:3.11.1-alpine3.17 pip'
 
