@@ -1,19 +1,23 @@
 // есть часть стандартной библиотеки, которая импортируется сама, она называется prelude
 // https://doc.rust-lang.org/std/prelude/index.html
 
-use std::cmp::Ordering;
-// библиотека ввода/вывода
-use std::io::stdin;
+use std::{
+    // для сравнения через match
+    cmp::Ordering,
+    // библиотека ввода/вывода
+    io::stdin,
+};
 // типаж Rng из библиотеки рандомизации, для работы с генератором
-use rand::{thread_rng, Rng};
-// для сравнения через match
+use rand::{
+    thread_rng,
+    Rng
+};
 
 fn main() {
     println!("Guess the number!");
-    thread_local! {}
 
     // получаем генератор, локальный для текущего потока выполнения
-    let secret_number = thread_rng().gen_range(1..=100);
+    let secret_number = thread_rng().gen_range(1..100);
 
     loop {
         println!("Please input your guess.");
